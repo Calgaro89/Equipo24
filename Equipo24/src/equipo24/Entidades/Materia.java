@@ -7,12 +7,9 @@ package equipo24.Entidades;
 public class Materia {
     
         private int idMateria;
-        
         private String nombre;
-        
         private int aniomateria;
-        
-        private boolean estado;
+         private boolean estado;
 
     public Materia() {
     }
