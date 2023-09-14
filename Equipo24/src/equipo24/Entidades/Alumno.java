@@ -12,6 +12,7 @@ public class Alumno {
     private String nombre;
     private LocalDate fechaNac;
     private boolean estado;
+    
 
     public Alumno() {
     }
