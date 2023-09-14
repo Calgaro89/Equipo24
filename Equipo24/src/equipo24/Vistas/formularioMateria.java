@@ -1,18 +1,19 @@
-
 package equipo24.vistas;
 
-/**
- *
- * @author alberto
- */
+import equipo24.AccesoADatos.MateriaData;
+import equipo24.Entidades.Materia;
+import javax.swing.JOptionPane;
+
 public class formularioMateria extends javax.swing.JInternalFrame {
 
-    
+    private MateriaData materiaData;
+    private Materia materiaActual;
+
     public formularioMateria() {
         initComponents();
+        materiaData = new MateriaData();
     }
 
-    
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -162,27 +163,88 @@ public class formularioMateria extends javax.swing.JInternalFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jBbuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBbuscarActionPerformed
-       
+
+        int codigo = Integer.parseInt(jTexcodigo.getText());
+        materiaActual = materiaData.buscarMateria(codigo);
+
+        if (materiaActual != null) {
+
+            jTexnombre.setText(materiaActual.getNombre());
+            jTexaño.setText(String.valueOf(materiaActual.getAniomateria()));
+            jRadioBestado.setSelected(materiaActual.getEstado());
+        } else {
+
+            JOptionPane.showMessageDialog(this, "Materia no encontrada");
+        }
+
     }//GEN-LAST:event_jBbuscarActionPerformed
 
+
     private void jBnuevoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBnuevoActionPerformed
-        // TODO add your handling code here:
+
+        materiaActual = new Materia();
+
+        jTexcodigo.setText("");
+        jTexnombre.setText("");
+        jTexaño.setText("");
+        jRadioBestado.setSelected(false);
+
     }//GEN-LAST:event_jBnuevoActionPerformed
 
-    private void jBeliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBeliminarActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jBeliminarActionPerformed
 
+    private void jBeliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBeliminarActionPerformed
+
+        if (materiaActual != null) {
+            int idMateriaEliminar = materiaActual.getIdMateria();
+
+            materiaData.eliminarMateria(idMateriaEliminar);
+
+            jTexcodigo.setText("");
+            jTexnombre.setText("");
+            jTexaño.setText("");
+            jRadioBestado.setSelected(false);
+
+            materiaActual = null; 
+        } else {
+            
+            JOptionPane.showMessageDialog(this, "No hay materia para eliminar");
+    }//GEN-LAST:event_jBeliminarActionPerformed
+    }
+    
+    
     private void jBguardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBguardarActionPerformed
-        // TODO add your handling code here:
+
+        materiaActual = new Materia();
+        
+        
+        
+        if(materiaActual.getIdMateria() != Integer.parseInt(jTexcodigo.getText())) {
+
+            materiaActual.setIdMateria(Integer.parseInt(jTexcodigo.getText()));
+            materiaActual.setNombre(jTexnombre.getText());
+            materiaActual.setAniomateria (Integer.parseInt(jTexaño.getText()));
+            materiaActual.setEstado(jRadioBestado.isSelected());
+
+            materiaData.guardarMateria(materiaActual);
+
+            JOptionPane.showMessageDialog(this, "Materia guardada/actualizada con éxito");
+        } else {
+            // Puedes mostrar un mensaje de error si no hay una materia actual para guardar/actualizar
+            JOptionPane.showMessageDialog(this, "No hay materia para guardar/actualizar");
+
     }//GEN-LAST:event_jBguardarActionPerformed
 
+ }     
+        
     private void jBsalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBsalirActionPerformed
-        // TODO add your handling code here:
+
+        dispose();
     }//GEN-LAST:event_jBsalirActionPerformed
 
+
     private void jRadioBestadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioBestadoActionPerformed
-        // TODO add your handling code here:
+
+
     }//GEN-LAST:event_jRadioBestadoActionPerformed
 
 
