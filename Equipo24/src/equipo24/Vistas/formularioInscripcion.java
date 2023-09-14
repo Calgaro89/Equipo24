@@ -1,27 +1,17 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package equipo24.vistas;
-
 
 import equipo24.Entidades.*;
 import equipo24.AccesoADatos.*;
-import java.util.Set;
 import javax.swing.table.DefaultTableModel;
 
-/**
- *
- * @author alberto
- */
 public class formularioInscripcion extends javax.swing.JInternalFrame {
+
     private DefaultTableModel modelo = new DefaultTableModel();
-    /**
-     * Creates new form formularioInscripcion
-     */
+
     public formularioInscripcion() {
         initComponents();
+        cabecera();
+        cargarAlumnos();
     }
 
     /**
@@ -87,6 +77,11 @@ public class formularioInscripcion extends javax.swing.JInternalFrame {
         });
 
         jInscribir.setText("Inscribir");
+        jInscribir.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jInscribirActionPerformed(evt);
+            }
+        });
 
         jTabla.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -184,30 +179,23 @@ public class formularioInscripcion extends javax.swing.JInternalFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jComboActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboActionPerformed
-            AlumnoData alum = new AlumnoData();
-        for (Alumno elAlumno: alum.listarAlumnos()){
-            jCombo.addItem(elAlumno);
-            }
-            
-        
-    }//GEN-LAST:event_jComboActionPerformed
-
     private void jRadioInscriptasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioInscriptasActionPerformed
-       if (jRadioInscriptas.isEnabled()) {
+        LimpiarTabla();
+        InscripcionData insData = new InscripcionData();
+        if (jRadioInscriptas.isSelected()) {
             jRadioNoInscriptas.setSelected(false);
             jInscribir.setEnabled(false);
             jAnular.setEnabled(true);
-        }else{
-        jInscribir.setEnabled(true);
-        jAnular.setEnabled(false);
-        }
-       
-       InscripcionData ins = new InscripcionData();
-        for (Materia laMateria: ins.obtenerMateriasCursadas()) {
-            modelo.addRow(new Object[]{
-                laMateria.getIdMateria(),laMateria.getNombre(),laMateria.getAniomateria()
-            });
+            Alumno alumno = (Alumno) jCombo.getSelectedItem();
+            for (Materia materia : insData.obtenerMateriasCursadas(alumno.getIdAlumno())) {
+                modelo.addRow(new Object[]{
+                    materia.getIdMateria(),
+                    materia.getNombre(),
+                    materia.getAniomateria()
+                });
+            }
+        } else {
+            jInscribir.setEnabled(true);
         }
     }//GEN-LAST:event_jRadioInscriptasActionPerformed
 
@@ -216,20 +204,47 @@ public class formularioInscripcion extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_jSalirActionPerformed
 
     private void jRadioNoInscriptasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioNoInscriptasActionPerformed
-       
-        if (jRadioNoInscriptas.isEnabled()) {
-             jRadioInscriptas.setSelected(false);
-            jAnular.setEnabled(false);
+        LimpiarTabla();
+        InscripcionData insData = new InscripcionData();
+        if (jRadioNoInscriptas.isSelected()) {
+            jRadioInscriptas.setSelected(false);
             jInscribir.setEnabled(true);
-        }else{
-        jAnular.setEnabled(true);
-        jInscribir.setEnabled(false);
+            jAnular.setEnabled(false);
+            Alumno alumno = (Alumno) jCombo.getSelectedItem();
+            for (Materia materia : insData.obtenerMateriasNoCursadas(alumno.getIdAlumno())) {
+                modelo.addRow(new Object[]{
+                    materia.getIdMateria(),
+                    materia.getNombre(),
+                    materia.getAniomateria()
+                });
+            }
         }
     }//GEN-LAST:event_jRadioNoInscriptasActionPerformed
 
     private void jAnularActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jAnularActionPerformed
-        
+        InscripcionData ins = new InscripcionData();
+        Alumno alumno = (Alumno) jCombo.getSelectedItem();
+        String dato = String.valueOf(modelo.getValueAt(jTabla.getSelectedRow(), 0));
+        int matID = Integer.parseInt(dato);
+        ins.borrarinscripcionAlumnoMateria(alumno.getIdAlumno(), matID);
+
     }//GEN-LAST:event_jAnularActionPerformed
+
+    private void jComboActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboActionPerformed
+
+    }//GEN-LAST:event_jComboActionPerformed
+
+    private void jInscribirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jInscribirActionPerformed
+        InscripcionData ins = new InscripcionData();
+        Inscripcion inscripcion = new Inscripcion();
+        Alumno alumno =(Alumno) jCombo.getSelectedItem();
+        String dato = String.valueOf(modelo.getValueAt(jTabla.getSelectedRow(), 0));
+        int matID = Integer.parseInt(dato);
+        inscripcion.setIdAlumno(alumno.getIdAlumno());
+        inscripcion.setIdMateria(matID);
+        inscripcion.setNota(0);
+        ins.guardarInscripcion(inscripcion);
+    }//GEN-LAST:event_jInscribirActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -246,11 +261,26 @@ public class formularioInscripcion extends javax.swing.JInternalFrame {
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTable jTabla;
     // End of variables declaration//GEN-END:variables
-public void cabecera(){
-modelo.addColumn("ID");
-modelo.addColumn("Nombre");
-modelo.addColumn("Año");
-jTabla.setModel(modelo);
-}
+public void cabecera() {
+        modelo.addColumn("ID");
+        modelo.addColumn("Nombre");
+        modelo.addColumn("Año");
+        jTabla.setModel(modelo);
+    }
 
+    public void LimpiarTabla() {
+        DefaultTableModel temp = (DefaultTableModel) jTabla.getModel();
+        int filas = jTabla.getRowCount();
+
+        for (int a = 0; filas > a; a++) {
+            temp.removeRow(0);
+        }
+    }
+
+    public void cargarAlumnos() {
+        AlumnoData aluData = new AlumnoData();
+        for (Alumno alumno : aluData.listarAlumnos()) {
+            jCombo.addItem(alumno);
+        }
+    }
 }
