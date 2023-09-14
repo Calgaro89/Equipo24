@@ -153,7 +153,7 @@ public class MateriaData {
 
             if (fila == 1) {
 
-                JOptionPane.showMessageDialog(null, " Se eliminÃ³ la materia.");
+                JOptionPane.showMessageDialog(null, " Se elimino la materia.");
 
             }
 
