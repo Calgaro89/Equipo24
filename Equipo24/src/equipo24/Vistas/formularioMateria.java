@@ -224,24 +224,56 @@ public class formularioMateria extends javax.swing.JInternalFrame {
 
         String nombreText = jTexnombre.getText();
         String anioText = jTexaño.getText();
+        String idText = jTexcodigo.getText();
 
-        if (!nombreText.isEmpty() && !anioText.isEmpty()) {
-            try {
-                String nom = nombreText;
-                int anio = Integer.parseInt(anioText);
+        if (idText.isEmpty()) {
 
-                materiaActual.setNombre(nom);
-                materiaActual.setAniomateria(anio);
-                materiaActual.setEstado(jRadioBestado.isSelected());
+            if (!nombreText.isEmpty() && !anioText.isEmpty()) {
+                try {
+                    String nom = nombreText;
+                    int anio = Integer.parseInt(anioText);
 
-                materiaData.guardarMateria(materiaActual);
+                    materiaActual.setNombre(nom);
+                    materiaActual.setAniomateria(anio);
+                    materiaActual.setEstado(jRadioBestado.isSelected());
 
-                JOptionPane.showMessageDialog(this, "Materia guardada/actualizada con éxito");
-            } catch (NumberFormatException e) {
-                JOptionPane.showMessageDialog(this, "Ingresa valores numéricos válidos en el campo Año.");
+                    materiaData.guardarMateria(materiaActual);
+                    materiaData.guardarMateriaDos(materiaActual);
+
+                    JOptionPane.showMessageDialog(this, "Materia guardada con éxito");
+                } catch (NumberFormatException e) {
+                    JOptionPane.showMessageDialog(this, "Ingresa valores numéricos válidos en el campo Año.");
+                }
+
+            } else {
+                JOptionPane.showMessageDialog(this, "Los campos nombre y Año no pueden estar vacíos.");
             }
+
         } else {
-            JOptionPane.showMessageDialog(this, "Los campos nombre y Año no pueden estar vacíos.");
+            
+            if (!nombreText.isEmpty() && !anioText.isEmpty()) {
+                try {
+                    String nom = nombreText;
+                    int anio = Integer.parseInt(anioText);
+
+                    materiaActual.setNombre(nom);
+                    materiaActual.setAniomateria(anio);
+                    materiaActual.setEstado(jRadioBestado.isSelected());
+
+                    materiaData.modificarMateria(materiaActual);
+
+                    JOptionPane.showMessageDialog(this, "Materia actualizada con éxito");
+                } catch (NumberFormatException e) {
+                    JOptionPane.showMessageDialog(this, "Ingresa valores numéricos válidos en el campo Año.");
+                }
+
+            } else {
+                JOptionPane.showMessageDialog(this, "Los campos nombre y Año no pueden estar vacíos.");
+            }
+            
+            
+            
+            
         }
 
 
