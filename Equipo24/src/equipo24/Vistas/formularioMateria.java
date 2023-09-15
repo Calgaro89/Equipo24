@@ -2,6 +2,7 @@ package equipo24.vistas;
 
 import equipo24.AccesoADatos.MateriaData;
 import equipo24.Entidades.Materia;
+import java.sql.SQLException;
 import javax.swing.JOptionPane;
 
 public class formularioMateria extends javax.swing.JInternalFrame {
@@ -12,14 +13,14 @@ public class formularioMateria extends javax.swing.JInternalFrame {
     public formularioMateria() {
         initComponents();
         materiaData = new MateriaData();
+        materiaActual = new Materia();
     }
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jLabel6 = new javax.swing.JLabel();
-        jLcodigo = new javax.swing.JLabel();
+        jLid = new javax.swing.JLabel();
         jLnombre = new javax.swing.JLabel();
         jLaño = new javax.swing.JLabel();
         jLestado = new javax.swing.JLabel();
@@ -34,9 +35,7 @@ public class formularioMateria extends javax.swing.JInternalFrame {
         jTexnombre = new javax.swing.JTextField();
         jRadioBestado = new javax.swing.JRadioButton();
 
-        jLabel6.setText("jLabel6");
-
-        jLcodigo.setText("Codigo");
+        jLid.setText("idMateria");
 
         jLnombre.setText("Nombre");
 
@@ -97,7 +96,7 @@ public class formularioMateria extends javax.swing.JInternalFrame {
                         .addGap(25, 25, 25)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLcodigo)
+                                .addComponent(jLid)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(jBbuscar))
                             .addGroup(layout.createSequentialGroup()
@@ -135,7 +134,7 @@ public class formularioMateria extends javax.swing.JInternalFrame {
                 .addComponent(jLmateria, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(7, 7, 7)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLcodigo)
+                    .addComponent(jLid)
                     .addComponent(jBbuscar)
                     .addComponent(jTexcodigo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(19, 19, 19)
@@ -164,18 +163,27 @@ public class formularioMateria extends javax.swing.JInternalFrame {
 
     private void jBbuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBbuscarActionPerformed
 
-        int codigo = Integer.parseInt(jTexcodigo.getText());
-        materiaActual = materiaData.buscarMateria(codigo);
+        String codigoText = jTexcodigo.getText();
 
-        if (materiaActual != null) {
+        if (!codigoText.isEmpty()) {
+            try {
+                int codigo = Integer.parseInt(codigoText);
+                materiaActual = materiaData.buscarMateria(codigo);
 
-            jTexnombre.setText(materiaActual.getNombre());
-            jTexaño.setText(String.valueOf(materiaActual.getAniomateria()));
-            jRadioBestado.setSelected(materiaActual.getEstado());
+                if (materiaActual != null) {
+                    jTexnombre.setText(materiaActual.getNombre());
+                    jTexaño.setText(String.valueOf(materiaActual.getAniomateria()));
+                    jRadioBestado.setSelected(materiaActual.isEstado());
+                } else {
+                    JOptionPane.showMessageDialog(this, "Materia no encontrada");
+                }
+            } catch (NumberFormatException e) {
+                JOptionPane.showMessageDialog(this, "Ingresa un valor numérico válido en el campo idMateria.");
+            }
         } else {
-
-            JOptionPane.showMessageDialog(this, "Materia no encontrada");
+            JOptionPane.showMessageDialog(this, "El campo idMateria no puede estar vacío.");
         }
+
 
     }//GEN-LAST:event_jBbuscarActionPerformed
 
@@ -204,38 +212,42 @@ public class formularioMateria extends javax.swing.JInternalFrame {
             jTexaño.setText("");
             jRadioBestado.setSelected(false);
 
-            materiaActual = null; 
+            materiaActual = null;
         } else {
-            
+
             JOptionPane.showMessageDialog(this, "No hay materia para eliminar");
     }//GEN-LAST:event_jBeliminarActionPerformed
     }
-    
-    
+
+
     private void jBguardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBguardarActionPerformed
 
-        materiaActual = new Materia();
-        
-        
-        
-        if(materiaActual.getIdMateria() != Integer.parseInt(jTexcodigo.getText())) {
+        String nombreText = jTexnombre.getText();
+        String anioText = jTexaño.getText();
 
-            materiaActual.setIdMateria(Integer.parseInt(jTexcodigo.getText()));
-            materiaActual.setNombre(jTexnombre.getText());
-            materiaActual.setAniomateria (Integer.parseInt(jTexaño.getText()));
-            materiaActual.setEstado(jRadioBestado.isSelected());
+        if (!nombreText.isEmpty() && !anioText.isEmpty()) {
+            try {
+                String nom = nombreText;
+                int anio = Integer.parseInt(anioText);
 
-            materiaData.guardarMateria(materiaActual);
+                materiaActual.setNombre(nom);
+                materiaActual.setAniomateria(anio);
+                materiaActual.setEstado(jRadioBestado.isSelected());
 
-            JOptionPane.showMessageDialog(this, "Materia guardada/actualizada con éxito");
+                materiaData.guardarMateria(materiaActual);
+
+                JOptionPane.showMessageDialog(this, "Materia guardada/actualizada con éxito");
+            } catch (NumberFormatException e) {
+                JOptionPane.showMessageDialog(this, "Ingresa valores numéricos válidos en el campo Año.");
+            }
         } else {
-            // Puedes mostrar un mensaje de error si no hay una materia actual para guardar/actualizar
-            JOptionPane.showMessageDialog(this, "No hay materia para guardar/actualizar");
+            JOptionPane.showMessageDialog(this, "Los campos nombre y Año no pueden estar vacíos.");
+        }
+
 
     }//GEN-LAST:event_jBguardarActionPerformed
 
- }     
-        
+
     private void jBsalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBsalirActionPerformed
 
         dispose();
@@ -244,7 +256,7 @@ public class formularioMateria extends javax.swing.JInternalFrame {
 
     private void jRadioBestadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioBestadoActionPerformed
 
-
+        System.out.println("");
     }//GEN-LAST:event_jRadioBestadoActionPerformed
 
 
@@ -254,10 +266,9 @@ public class formularioMateria extends javax.swing.JInternalFrame {
     private javax.swing.JButton jBguardar;
     private javax.swing.JButton jBnuevo;
     private javax.swing.JButton jBsalir;
-    private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLaño;
-    private javax.swing.JLabel jLcodigo;
     private javax.swing.JLabel jLestado;
+    private javax.swing.JLabel jLid;
     private javax.swing.JLabel jLmateria;
     private javax.swing.JLabel jLnombre;
     private javax.swing.JRadioButton jRadioBestado;
