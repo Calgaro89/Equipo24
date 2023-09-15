@@ -6,38 +6,47 @@
 package equipo24.vistas;
 
 import equipo24.AccesoADatos.AlumnoData;
+import equipo24.AccesoADatos.Conexion;
 import equipo24.AccesoADatos.InscripcionData;
 import equipo24.Entidades.Alumno;
+import equipo24.Entidades.Inscripcion;
 import equipo24.Entidades.Materia;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
-/**
- *
- * @author alberto
- */
 public class cargaNotas extends javax.swing.JInternalFrame {
 
-    /**
-     * Creates new form cargaNotas
-     */
+    private Connection con = null;
+    InscripcionData mats = new InscripcionData();
+
     public cargaNotas() {
         initComponents();
         cabecera();
+        llenar();
+
+    }
+    private DefaultTableModel modelo = new DefaultTableModel() {
+
+        @Override
+        public boolean isCellEditable(int f, int c) {
+            if (c == 2) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+    };
+
+    private void llenar() {
         AlumnoData combo = new AlumnoData();
         for (Alumno listar : combo.listarAlumnos()) {
             jComboBox1.addItem(listar);
         }
-
     }
-    private DefaultTableModel modelo = new DefaultTableModel() {
-        public boolean isCellEditable(int f, int c) {
-            if (c == 2) {
-                return true;
-            }
-            return false;
-        }
-
-    };
 
     private void cabecera() {
         modelo.addColumn("codigo");
@@ -70,6 +79,12 @@ public class cargaNotas extends javax.swing.JInternalFrame {
 
         jLabel2.setText("Seleccione Alumno:");
 
+        jComboBox1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jComboBox1MouseClicked(evt);
+            }
+        });
+
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null},
@@ -84,8 +99,18 @@ public class cargaNotas extends javax.swing.JInternalFrame {
         jScrollPane1.setViewportView(jTable1);
 
         jButton1.setText("Guardar");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         jButton2.setText("Salir");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -147,28 +172,59 @@ public class cargaNotas extends javax.swing.JInternalFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
- private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+
         dispose();
-    }
+    }//GEN-LAST:event_jButton2ActionPerformed
 
-    private void jComboBoxMouseClicked(java.awt.event.MouseEvent evt) {
+    private void jComboBox1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jComboBox1MouseClicked
         borrarFilas();
-
+        con = Conexion.getConexion();
         Alumno st = (Alumno) jComboBox1.getSelectedItem();
-        InscripcionData mats = new InscripcionData();
 
-        for (Materia aux : mats.obtenerMateriasCursadas(st.getIdAlumno())) {
-            int m = aux.getIdMateria();
-            int a = st.getIdAlumno();
+        try {
+            for (Materia aux : mats.obtenerMateriasCursadas(st.getIdAlumno())) {
+                String sql = "SELECT * "
+                        + "FROM inscripcion "
+                        + "WHERE idAlumno=? AND idMAteria=?";
+                PreparedStatement ps = con.prepareStatement(sql);
+                ps.setInt(1, st.getIdAlumno());
+                ps.setInt(2, aux.getIdMateria());
+                ResultSet rs = ps.executeQuery();
+                Inscripcion Inscripcion = null;
+                while (rs.next()) {
+                    Inscripcion = new Inscripcion();
+                    Inscripcion.setNota(rs.getInt("nota"));
+                }
+                modelo.addRow(new Object[]{
+                    aux.getIdMateria(),
+                    aux.getNombre(),
+                    Inscripcion.getNota(),});
 
-            String sql = "SELECT `idInscripto`, `nota`, `idAlumno`, `idMateria` FROM `inscripcion` WHERE ";
-
-            modelo.addRow(new Object[]{
-                aux.getIdMateria(),
-                aux.getNombre(),});
+            }
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null, "Error al buscar notas");
         }
-    }
 
+    }//GEN-LAST:event_jComboBox1MouseClicked
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        Alumno st = (Alumno) jComboBox1.getSelectedItem();
+        //    mats.actualizarNota(1, 1, 5);
+        int idA = st.getIdAlumno();
+        int filas = modelo.getRowCount();
+        int idM = 0;
+        int nota = 0;
+
+        for (int i = 0; i < filas; i++) {
+            idM = (Integer) modelo.getValueAt(i, 0);
+            nota = (Integer) modelo.getValueAt(i, 2);
+            mats.actualizarNota(idA, idM, nota);
+//   JOptionPane.showMessageDialog(null,"totalfilas:"+filas+"fila: "+(i)+" idalumno:"+idA+" idmateria:" +idM +" nota:"+nota);
+
+        }
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
