@@ -208,9 +208,9 @@ public class FormularioALumno extends javax.swing.JInternalFrame {
     private void jbEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbEliminarActionPerformed
        
         if (alum != null){
-            int IdAlumnoEliminado = alum.getIdAlumno();
+            int dniAlumnoEliminado = alum.getDni();
             
-            alumno.eliminarAlumno(IdAlumnoEliminado);
+            alumno.eliminarAlumno(dniAlumnoEliminado);
         
             jtDni.setText("");
             jtApellido.setText("");
