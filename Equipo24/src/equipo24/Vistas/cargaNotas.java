@@ -211,19 +211,22 @@ public class cargaNotas extends javax.swing.JInternalFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         Alumno st = (Alumno) jComboBox1.getSelectedItem();
-        //    mats.actualizarNota(1, 1, 5);
         int idA = st.getIdAlumno();
-        int filas = modelo.getRowCount();
-        int idM = 0;
-        int nota = 0;
+        
+        for (int i = 0; i < (modelo.getRowCount()); i++) {
 
-        for (int i = 0; i < filas; i++) {
-            idM = (Integer) modelo.getValueAt(i, 0);
-            nota = (Integer) modelo.getValueAt(i, 2);
-            mats.actualizarNota(idA, idM, nota);
-//   JOptionPane.showMessageDialog(null,"totalfilas:"+filas+"fila: "+(i)+" idalumno:"+idA+" idmateria:" +idM +" nota:"+nota);
+            Object f = modelo.getValueAt(i, 2);
+            String d = f.toString();
+            int nota = Integer.parseInt(d);
 
+            Object g = modelo.getValueAt(i, 0);
+            String h = g.toString();
+            int idm = Integer.parseInt(h);
+
+            mats.actualizarNota(idA, idm, nota);
         }
+        JOptionPane.showMessageDialog(rootPane, "Se actualizo las nota/s correctamente");
+          borrarFilas();
     }//GEN-LAST:event_jButton1ActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
