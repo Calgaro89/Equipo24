@@ -4,12 +4,17 @@ package equipo24.vistas;
 import equipo24.AccesoADatos.AlumnoData;
 import equipo24.Entidades.Alumno;
 import java.time.ZoneId;
+import javax.swing.JOptionPane;
 
 
 public class FormularioALumno extends javax.swing.JInternalFrame {
 
     AlumnoData alumno = new AlumnoData();   
     Alumno alum = new Alumno(); 
+    
+    
+    
+    
     
     public FormularioALumno() {
         initComponents();
@@ -60,12 +65,32 @@ public class FormularioALumno extends javax.swing.JInternalFrame {
         });
 
         jbNuevo.setText("Nuevo");
+        jbNuevo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jbNuevoActionPerformed(evt);
+            }
+        });
 
         jbEliminar.setText("Eliminar");
+        jbEliminar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jbEliminarActionPerformed(evt);
+            }
+        });
 
         jbGuardar.setText("Guardar");
+        jbGuardar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jbGuardarActionPerformed(evt);
+            }
+        });
 
         jbSalir.setText("Salir");
+        jbSalir.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jbSalirActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -170,6 +195,46 @@ public class FormularioALumno extends javax.swing.JInternalFrame {
      alum.setFechaNac(jdNacimiento.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
      
     }//GEN-LAST:event_jbBuscarActionPerformed
+
+    private void jbNuevoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbNuevoActionPerformed
+        
+        jtDni.setText("");
+        jtApellido.setText("");
+        jtNombre.setText("");
+        jrEstado.setSelected(false);
+        
+    }//GEN-LAST:event_jbNuevoActionPerformed
+
+    private void jbEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbEliminarActionPerformed
+       
+        if (alum != null){
+            int IdAlumnoEliminado = alum.getIdAlumno();
+            
+            alumno.eliminarAlumno(IdAlumnoEliminado);
+        
+            jtDni.setText("");
+            jtApellido.setText("");
+            jtNombre.setText("");
+            jrEstado.setSelected(false);
+            
+        } else {
+            
+            JOptionPane.showMessageDialog(null, " no hay alumno a eliminar");
+        }
+        
+    }//GEN-LAST:event_jbEliminarActionPerformed
+
+    private void jbGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbGuardarActionPerformed
+       
+        
+        
+    }//GEN-LAST:event_jbGuardarActionPerformed
+
+    private void jbSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbSalirActionPerformed
+        
+        dispose();
+        
+    }//GEN-LAST:event_jbSalirActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel jLabel1;
