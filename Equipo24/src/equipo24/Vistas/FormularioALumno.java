@@ -3,7 +3,10 @@ package equipo24.vistas;
 
 import equipo24.AccesoADatos.AlumnoData;
 import equipo24.Entidades.Alumno;
+import java.time.Instant;
+import java.time.LocalDate;
 import java.time.ZoneId;
+import java.util.Date;
 import javax.swing.JOptionPane;
 
 
@@ -182,7 +185,24 @@ public class FormularioALumno extends javax.swing.JInternalFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jbBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbBuscarActionPerformed
-       
+     
+        int dni = Integer.parseInt(jtDni.getText());
+        Alumno alumno2 = alumno.buscarAlumnoPorDni(dni);
+        
+        if (alumno != null){
+            
+        jtApellido.setText(alumno2.getApellido());
+        jtNombre.setText(alumno2.getNombre());
+        jrEstado.setSelected(alumno2.isEstado());
+        
+        LocalDate fechaNacimientoLocalDate = alumno2.getFechaNac();
+        Date fechaNacimientoDate = Date.from(fechaNacimientoLocalDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
+        jdNacimiento.setDate(fechaNacimientoDate);
+        
+    }
+        
+        
+        /*  
      alum.setDni(Integer.parseInt(jtDni.getText()));
      alum.setApellido(jtApellido.getText());
      alum.setNombre(jtNombre.getText());
@@ -193,6 +213,7 @@ public class FormularioALumno extends javax.swing.JInternalFrame {
      }
      
      alum.setFechaNac(jdNacimiento.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
+     */
      
     }//GEN-LAST:event_jbBuscarActionPerformed
 
