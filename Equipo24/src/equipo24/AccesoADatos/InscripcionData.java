@@ -27,8 +27,8 @@ public class InscripcionData {
         try {
            PreparedStatement ps = con.prepareStatement(sql,Statement.RETURN_GENERATED_KEYS);
             ps.setInt(1, inscripcion.getNota());
-            ps.setInt(2, inscripcion.getIdAlumno());
-            ps.setInt(3, inscripcion.getIdMateria());
+            ps.setInt(2, inscripcion.getAlumno().getIdAlumno());
+            ps.setInt(3, inscripcion.getMateria().getIdMateria());
             ps.executeUpdate();
             ResultSet rs = ps.getGeneratedKeys();
             if (rs.next()) {
@@ -47,12 +47,18 @@ public class InscripcionData {
             PreparedStatement ps = con.prepareStatement(sql);
             ResultSet rs = ps.executeQuery();
             Inscripcion inscripcion;
+            Alumno alumno;
+            Materia materia;
             while (rs.next()) {
                 inscripcion = new Inscripcion();
+                alumno=new Alumno();
+                materia = new Materia();
                 inscripcion.setIdInscripto(rs.getInt("idInscripto"));
                 inscripcion.setNota(rs.getInt("nota"));
-                inscripcion.setIdAlumno(rs.getInt("idAlumno"));
-                inscripcion.setIdMateria(rs.getInt("idMateria"));
+                alumno.setIdAlumno(rs.getInt("idAlumno"));
+                inscripcion.setAlumno(alumno);
+                materia.setIdMateria(rs.getInt("idMateria"));
+                inscripcion.setMateria(materia);
                 inscripciones.add(inscripcion);
             }
             ps.close();
@@ -69,12 +75,18 @@ public class InscripcionData {
             ps.setInt(1, id);
             ResultSet rs = ps.executeQuery();
             Inscripcion inscripcion;
+            Alumno alumno;
+            Materia materia;
             while (rs.next()) {
                 inscripcion = new Inscripcion();
+                alumno = new Alumno();
+                materia = new Materia();
                 inscripcion.setIdInscripto(rs.getInt("idInscripto"));
                 inscripcion.setNota(rs.getInt("nota"));
-                inscripcion.setIdAlumno(rs.getInt("idAlumno"));
-                inscripcion.setIdMateria(rs.getInt("idMateria"));
+                alumno.setIdAlumno(rs.getInt("idAlumno"));
+                inscripcion.setAlumno(alumno);
+                materia.setIdMateria(rs.getInt("idMateria"));
+                inscripcion.setMateria(materia);
                 inscripciones.add(inscripcion);
             }
             ps.close();
@@ -107,10 +119,8 @@ public class InscripcionData {
     public List<Materia> obtenerMateriasNoCursadas(int id){
     List<Materia> materias = new ArrayList<Materia>();
     try {
-    String sql = "SELECT inscripcion.idMateria,nombre,año "
-            + "FROM inscripcion,materia "
-            + "WHERE inscripcion.idMateria = materia.idMateria "
-            + "AND inscripcion.idAlumno <> ?";
+    String sql = "SELECT * FROM materia WHERE estado = 1 "
+            + "AND idMateria not in (SELECT idMateria FROM inscripcion WHERE idAlumno = ?)";
           PreparedStatement ps = con.prepareStatement(sql);
           ps.setInt(1, id);
           ResultSet rs = ps.executeQuery();

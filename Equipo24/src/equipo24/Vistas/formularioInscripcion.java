@@ -6,7 +6,16 @@ import javax.swing.table.DefaultTableModel;
 
 public class formularioInscripcion extends javax.swing.JInternalFrame {
 
-    private DefaultTableModel modelo = new DefaultTableModel();
+    private DefaultTableModel modelo = new DefaultTableModel() {
+        @Override
+        public boolean isCellEditable(int fila, int columna) {
+            if (columna == 100) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+    };
 
     public formularioInscripcion() {
         initComponents();
@@ -94,6 +103,7 @@ public class formularioInscripcion extends javax.swing.JInternalFrame {
                 "Title 1", "Title 2", "Title 3"
             }
         ));
+        jTabla.getTableHeader().setReorderingAllowed(false);
         jScrollPane2.setViewportView(jTabla);
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
@@ -231,17 +241,21 @@ public class formularioInscripcion extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_jAnularActionPerformed
 
     private void jComboActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboActionPerformed
+        LimpiarTabla();
+        jRadioInscriptas.setSelected(false);
+        jRadioNoInscriptas.setSelected(false);
 
     }//GEN-LAST:event_jComboActionPerformed
 
     private void jInscribirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jInscribirActionPerformed
         InscripcionData ins = new InscripcionData();
         Inscripcion inscripcion = new Inscripcion();
-        Alumno alumno =(Alumno) jCombo.getSelectedItem();
+        Materia materia = new Materia();
+        Alumno alumno = (Alumno) jCombo.getSelectedItem();
         String dato = String.valueOf(modelo.getValueAt(jTabla.getSelectedRow(), 0));
-        int matID = Integer.parseInt(dato);
-        inscripcion.setIdAlumno(alumno.getIdAlumno());
-        inscripcion.setIdMateria(matID);
+        materia.setIdMateria(Integer.parseInt(dato));
+        inscripcion.setMateria(materia);
+        inscripcion.setAlumno(alumno);
         inscripcion.setNota(0);
         ins.guardarInscripcion(inscripcion);
     }//GEN-LAST:event_jInscribirActionPerformed
@@ -282,5 +296,6 @@ public void cabecera() {
         for (Alumno alumno : aluData.listarAlumnos()) {
             jCombo.addItem(alumno);
         }
+        jCombo.setSelectedIndex(-1);
     }
 }
