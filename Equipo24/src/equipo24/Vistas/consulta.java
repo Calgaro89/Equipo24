@@ -66,9 +66,9 @@ public class consulta extends javax.swing.JInternalFrame {
 
         jLabel2.setText("Seleccione una materia :");
 
-        jComboBox1.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                jComboBox1MouseExited(evt);
+        jComboBox1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jComboBox1ActionPerformed(evt);
             }
         });
 
@@ -152,9 +152,15 @@ public class consulta extends javax.swing.JInternalFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jComboBox1MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jComboBox1MouseExited
-       borrarFilas();
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        dispose();
+    }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
+        // TODO add your handling code here:
+         borrarFilas();
         Materia mat = (Materia) jComboBox1.getSelectedItem();
+        
         for (Alumno aux : inscribir.obtenerAlumnosXMateria(mat.getIdMateria())) {
             modelo.addRow(new Object[]{
                 aux.getIdAlumno(),
@@ -162,11 +168,7 @@ public class consulta extends javax.swing.JInternalFrame {
                 aux.getApellido(),
                 aux.getNombre()});
         }
-    }//GEN-LAST:event_jComboBox1MouseExited
-
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        dispose();
-    }//GEN-LAST:event_jButton2ActionPerformed
+    }//GEN-LAST:event_jComboBox1ActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton2;

@@ -58,13 +58,10 @@ public class Materia {
     public void setEstado(boolean estado) {
         this.estado = estado;
     }
-
-    
-  
-    
+ 
     @Override
     public String toString() {
-        return "idMateria=" + idMateria + ", nombre=" + nombre + ", aniomateria=" + aniomateria + ", estado=" + estado + '}';
+        return nombre+ " " +aniomateria + "°";
     }
        
     

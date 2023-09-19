@@ -79,9 +79,9 @@ public class cargaNotas extends javax.swing.JInternalFrame {
 
         jLabel2.setText("Seleccione Alumno:");
 
-        jComboBox1.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jComboBox1MouseClicked(evt);
+        jComboBox1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jComboBox1ActionPerformed(evt);
             }
         });
 
@@ -178,7 +178,27 @@ public class cargaNotas extends javax.swing.JInternalFrame {
         dispose();
     }//GEN-LAST:event_jButton2ActionPerformed
 
-    private void jComboBox1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jComboBox1MouseClicked
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        Alumno st = (Alumno) jComboBox1.getSelectedItem();
+        int idA = st.getIdAlumno();
+        
+        for (int i = 0; i < (modelo.getRowCount()); i++) {
+
+            Object f = modelo.getValueAt(i, 2);
+            String d = f.toString();
+            int nota = Integer.parseInt(d);
+
+            Object g = modelo.getValueAt(i, 0);
+            String h = g.toString();
+            int idm = Integer.parseInt(h);
+
+            mats.actualizarNota(idA, idm, nota);
+        }
+        JOptionPane.showMessageDialog(rootPane, "Se actualizo las nota/s correctamente");
+          borrarFilas();
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
         borrarFilas();
         con = Conexion.getConexion();
         Alumno st = (Alumno) jComboBox1.getSelectedItem();
@@ -206,28 +226,7 @@ public class cargaNotas extends javax.swing.JInternalFrame {
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(null, "Error al buscar notas");
         }
-
-    }//GEN-LAST:event_jComboBox1MouseClicked
-
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        Alumno st = (Alumno) jComboBox1.getSelectedItem();
-        int idA = st.getIdAlumno();
-        
-        for (int i = 0; i < (modelo.getRowCount()); i++) {
-
-            Object f = modelo.getValueAt(i, 2);
-            String d = f.toString();
-            int nota = Integer.parseInt(d);
-
-            Object g = modelo.getValueAt(i, 0);
-            String h = g.toString();
-            int idm = Integer.parseInt(h);
-
-            mats.actualizarNota(idA, idm, nota);
-        }
-        JOptionPane.showMessageDialog(rootPane, "Se actualizo las nota/s correctamente");
-          borrarFilas();
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_jComboBox1ActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
