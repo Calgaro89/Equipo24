@@ -238,7 +238,7 @@ public class formularioMateria extends javax.swing.JInternalFrame {
                     materiaActual.setEstado(jRadioBestado.isSelected());
 
                     materiaData.guardarMateria(materiaActual);
-                    materiaData.guardarMateriaDos(materiaActual);
+                   
 
                     JOptionPane.showMessageDialog(this, "Materia guardada con éxito");
                 } catch (NumberFormatException e) {
@@ -251,11 +251,13 @@ public class formularioMateria extends javax.swing.JInternalFrame {
 
         } else {
             
-            if (!nombreText.isEmpty() && !anioText.isEmpty()) {
+            if (!nombreText.isEmpty() && !anioText.isEmpty() && !idText.isEmpty()) {
                 try {
                     String nom = nombreText;
                     int anio = Integer.parseInt(anioText);
+                    int id = Integer.parseInt(idText);
 
+                    materiaActual.setIdMateria(id);
                     materiaActual.setNombre(nom);
                     materiaActual.setAniomateria(anio);
                     materiaActual.setEstado(jRadioBestado.isSelected());

@@ -158,18 +158,5 @@ public class MateriaData {
 
     }
 
-    public void guardarMateriaDos(Materia materia) {
-        String sql = "INSERT INTO materia (idMateria,nombre, año, estado) VALUES (?, ?, ?, ?)";
-
-        try (PreparedStatement ps = con.prepareStatement(sql)) {
-            ps.setInt(3, materia.getIdMateria());
-            ps.setString(2, materia.getNombre());
-            ps.setInt(3, materia.getAniomateria());
-            ps.setBoolean(4, materia.isEstado());
-            ps.executeUpdate();
-        } catch (SQLException e) {
-            JOptionPane.showMessageDialog(null, "Error al acceder a la tabla Materia: " + e.getMessage());
-        }
-    }
-
+  
 }
