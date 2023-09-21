@@ -147,6 +147,7 @@ public class InscripcionData {
             ps.setInt(2, idMateria);
             ps.executeUpdate();
             ps.close();
+            JOptionPane.showMessageDialog(null, "Inscripcion eliminada con exito");
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(null, "Error al tratar de eliminar la inscripcion");
         }
