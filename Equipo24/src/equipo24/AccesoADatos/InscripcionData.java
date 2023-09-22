@@ -98,7 +98,7 @@ public class InscripcionData {
     public List<Materia> obtenerMateriasCursadas(int id){
     List<Materia> materias = new ArrayList<Materia>();
     try {
-    String sql = "SELECT inscripcion.idMateria,nombre,año FROM inscripcion,materia WHERE inscripcion.idMateria = materia.idMateria AND inscripcion.idAlumno = ?";
+    String sql = "SELECT inscripcion.idMateria,inscripcion.nota,nombre,año FROM inscripcion,materia WHERE inscripcion.idMateria = materia.idMateria AND inscripcion.idAlumno = ?";
           PreparedStatement ps = con.prepareStatement(sql);
           ps.setInt(1, id);
           ResultSet rs = ps.executeQuery();
