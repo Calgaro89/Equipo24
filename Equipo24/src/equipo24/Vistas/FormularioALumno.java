@@ -12,18 +12,13 @@ import javax.swing.JOptionPane;
 
 public class FormularioALumno extends javax.swing.JInternalFrame {
 
-    AlumnoData alumno = new AlumnoData();   
-    Alumno alum = new Alumno(); 
-    
-    
-    
-    
-    
+    AlumnoData alumno = new AlumnoData();
+    Alumno alum = new Alumno();
+
     public FormularioALumno() {
         initComponents();
     }
 
-    
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -185,76 +180,111 @@ public class FormularioALumno extends javax.swing.JInternalFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jbBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbBuscarActionPerformed
-     
+        
+        try {
         int dni = Integer.parseInt(jtDni.getText());
         Alumno alumno2 = alumno.buscarAlumnoPorDni(dni);
-        
-        if (alumno != null){
-            
-        jtApellido.setText(alumno2.getApellido());
-        jtNombre.setText(alumno2.getNombre());
-        jrEstado.setSelected(alumno2.isEstado());
-        
-        LocalDate fechaNacimientoLocalDate = alumno2.getFechaNac();
-        Date fechaNacimientoDate = Date.from(fechaNacimientoLocalDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
-        jdNacimiento.setDate(fechaNacimientoDate);
-        
-    }
-        
-        
-        /*  
-     alum.setDni(Integer.parseInt(jtDni.getText()));
-     alum.setApellido(jtApellido.getText());
-     alum.setNombre(jtNombre.getText());
-     if(jrEstado.isEnabled()==true){
-        alum.setEstado(true);
-     }else{
-        alum.setEstado(false);
-     }
-     
-     alum.setFechaNac(jdNacimiento.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
-     */
-     
+
+        if (alumno != null) {
+
+            jtApellido.setText(alumno2.getApellido());
+            jtNombre.setText(alumno2.getNombre());
+            jrEstado.setSelected(alumno2.isEstado());
+
+            LocalDate fechaNacimientoLocalDate = alumno2.getFechaNac();
+            Date fechaNacimientoDate = Date.from(fechaNacimientoLocalDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
+            jdNacimiento.setDate(fechaNacimientoDate);
+
+        }
+        } catch (NumberFormatException nf){
+            JOptionPane.showMessageDialog(null, " Sabes leer lcdtm???? " );
+        }  catch (NullPointerException np) {
+            JOptionPane.showMessageDialog(null, " Alumno no encontrado " );
+        }
     }//GEN-LAST:event_jbBuscarActionPerformed
 
     private void jbNuevoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbNuevoActionPerformed
-        
+
         jtDni.setText("");
         jtApellido.setText("");
         jtNombre.setText("");
         jrEstado.setSelected(false);
-        
+
     }//GEN-LAST:event_jbNuevoActionPerformed
 
     private void jbEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbEliminarActionPerformed
-       
-        if (alum != null){
-            int dniAlumnoEliminado = alum.getDni();
-            
-            alumno.eliminarAlumno(dniAlumnoEliminado);
+
+        String textDni = (jtDni.getText());
         
+        
+        if (!textDni.isEmpty() ) {
+            
+            int dni = Integer.parseInt(textDni);
+            
+            alumno.eliminarAlumno(dni);
+
             jtDni.setText("");
             jtApellido.setText("");
             jtNombre.setText("");
             jrEstado.setSelected(false);
             
+           
         } else {
-            
-            JOptionPane.showMessageDialog(null, " no hay alumno a eliminar");
+
+            JOptionPane.showMessageDialog(null, " No hay alumno a eliminar");
         }
-        
+
     }//GEN-LAST:event_jbEliminarActionPerformed
 
     private void jbGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbGuardarActionPerformed
-       
         
+        try{
+        String textDni = (jtDni.getText());
+        String textApellido = (jtApellido.getText());
+        String textNombre =(jtNombre.getText());
         
+        LocalDate fechaNac = (jdNacimiento.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
+
+        
+        if (!textDni.isEmpty()){
+            
+            if (!textApellido.isEmpty() && !textNombre.isEmpty()){
+                
+                int dni = Integer.parseInt(textDni);
+                String apellido = textApellido;
+                String nom = textNombre;
+                LocalDate fecha = fechaNac;
+                
+                
+                alum.setDni(dni);
+                alum.setApellido(apellido);
+                alum.setNombre(nom);
+                alum.setEstado(jrEstado.isSelected());
+                alum.setFechaNac(fechaNac);
+                
+                alumno.guardarAlumno(alum);
+                
+                JOptionPane.showMessageDialog(null, " Alumno guardado" );
+            } else {
+                JOptionPane.showMessageDialog(null, " Apellido y nombre vacios ");
+            }
+            
+        } else {
+            JOptionPane.showMessageDialog(null, " Falta el DNI " );
+        }
+        } catch (NullPointerException np) {
+            
+            JOptionPane.showMessageDialog(null, " Falta completar algun campo " );
+            
+        } catch (NumberFormatException nf){
+            JOptionPane.showMessageDialog(null, " Sabes leer lcdtm???? " );
+        }
     }//GEN-LAST:event_jbGuardarActionPerformed
 
     private void jbSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbSalirActionPerformed
-        
+
         dispose();
-        
+
     }//GEN-LAST:event_jbSalirActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
