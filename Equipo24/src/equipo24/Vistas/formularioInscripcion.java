@@ -2,6 +2,7 @@ package equipo24.vistas;
 
 import equipo24.Entidades.*;
 import equipo24.AccesoADatos.*;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 public class formularioInscripcion extends javax.swing.JInternalFrame {
@@ -13,7 +14,7 @@ public class formularioInscripcion extends javax.swing.JInternalFrame {
     private Inscripcion inscripcion = new Inscripcion();
     private Materia materia = new Materia();
     private Alumno alumno = new Alumno();
-    
+
 //        Seteo por default el modelo de la tabla.
 //        Edito el metodo isCellEditable y creo una condicion para que solo la columna numero 100 sea editable
 //        (Al no existir una columna con ese numero, entra en el else y la tabla no se podra editar)
@@ -62,6 +63,7 @@ public class formularioInscripcion extends javax.swing.JInternalFrame {
 
         jLabel2.setText("Seleccione Alumno:");
 
+        jLabel3.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
         jLabel3.setText("Listado de Materias");
 
         jCombo.addActionListener(new java.awt.event.ActionListener() {
@@ -222,7 +224,7 @@ public class formularioInscripcion extends javax.swing.JInternalFrame {
 //       Esto lo hago para que no habilite los botones Inscribir / anular antes de tener el alumno seleccionado y la tabla cargada.
         if (jCombo.getSelectedItem() != null) {
             materiasInscriptas();
-        }    
+        }
     }//GEN-LAST:event_jRadioInscriptasActionPerformed
 
     private void jSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jSalirActionPerformed
@@ -241,17 +243,21 @@ public class formularioInscripcion extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_jRadioNoInscriptasActionPerformed
 
     private void jAnularActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jAnularActionPerformed
+        try {
 //      Obtengo el alumno seleccionado en el jCumboBox y lo guardo en el atributo alumno para luego obtener el idAlumno de ahi.
-        alumno = (Alumno) jCombo.getSelectedItem();
+            alumno = (Alumno) jCombo.getSelectedItem();
 //      el codigo "modelo.getValueAt(N° de fila , N° de columna)" devuelve un objeto con el valor ubicado en la fila y columna que le especifiquemos
 //      en este caso solo queremos saber el valor de la primera columna que es el idMateria y usamos:
 //      jTabla.getSelectedRow() para indicar el numero de fila que es y 0 porque es la columna primera donde estan los ID
 //      String.valueOf convierte ese Objeto obtenido y lo transforma en un String que luego parseamos para obtener el entero del IdMateria.
-        String dato = String.valueOf(modelo.getValueAt(jTabla.getSelectedRow(), 0));
-        int matID = Integer.parseInt(dato);
-        insData.borrarinscripcionAlumnoMateria(alumno.getIdAlumno(), matID);
+            String dato = String.valueOf(modelo.getValueAt(jTabla.getSelectedRow(), 0));
+            int matID = Integer.parseInt(dato);
+            insData.borrarinscripcionAlumnoMateria(alumno.getIdAlumno(), matID);
 
-//      Una vez borrada la inscripcion, llamo al metodo materiasInscriptas para que vacie la tabla y la recargue actualizada.
+        } catch (ArrayIndexOutOfBoundsException e) {
+            JOptionPane.showMessageDialog(null, "Primero debes seleccionar una materia de la lista.", " Atencion!", JOptionPane.WARNING_MESSAGE);
+        }
+        //      Una vez borrada la inscripcion, llamo al metodo materiasInscriptas para que vacie la tabla y la recargue actualizada
         materiasInscriptas();
     }//GEN-LAST:event_jAnularActionPerformed
 
@@ -265,24 +271,57 @@ public class formularioInscripcion extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_jComboActionPerformed
 
     private void jInscribirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jInscribirActionPerformed
+        try {
 //      Obtengo el alumno seleccionado en el jCumboBox y lo guardo en el atributo alumno para luego obtener el idAlumno de ahi.
-        alumno = (Alumno) jCombo.getSelectedItem();
+            alumno = (Alumno) jCombo.getSelectedItem();
 //      el codigo "modelo.getValueAt(N° de fila , N° de columna)" devuelve un objeto con el valor ubicado en la fila y columna que le especifiquemos
 //      en este caso solo queremos saber el valor de la primera columna que es el idMateria y usamos:
 //      jTabla.getSelectedRow() para indicar el numero de fila que es y 0 porque es la columna primera donde estan los ID
 //      String.valueOf convierte ese Objeto obtenido y lo transforma en un String que luego parseamos para obtener el entero del IdMateria.        
-        String dato = String.valueOf(modelo.getValueAt(jTabla.getSelectedRow(), 0));
-        int matID = Integer.parseInt(dato);
-        materia.setIdMateria(matID);
-        inscripcion.setMateria(materia);
-        inscripcion.setAlumno(alumno);
-        inscripcion.setNota(0);
-        insData.guardarInscripcion(inscripcion);
-        
-//      Una agregada la inscripcion, llamo al metodo materiasNoInscriptas para que vacie la tabla y la recargue actualizada.
-        materiasNoInscriptas();
-    }//GEN-LAST:event_jInscribirActionPerformed
+            String dato = String.valueOf(modelo.getValueAt(jTabla.getSelectedRow(), 0));
+            int matID = Integer.parseInt(dato);
+            materia.setIdMateria(matID);
+            inscripcion.setMateria(materia);
+            inscripcion.setAlumno(alumno);
+            String cadena;
+            int nota = -1;
+            try {
+                do {
+                    cadena = JOptionPane.showInputDialog(null, "¿Cuál es la nota que obtuvo?", "Nota", JOptionPane.QUESTION_MESSAGE);
 
+                    if (cadena != null) {
+//            el matches("[0-9]+") comprueba si la cadena que es un String contiene solo digitos numericos,el "+" le indica que porlomenos debe contener 1 digito.
+                        if (cadena.matches("[0-9]+")) {
+                            nota = Integer.parseInt(cadena);
+
+                            if (nota >= 0 && nota <= 10) {
+//                     Establece la nota solo si esta dentro del rango valido 0-10
+                                inscripcion.setNota(nota);
+                            } else {
+                                JOptionPane.showMessageDialog(null, "Debe ingresar un número entero válido entre 0 y 10");
+                            }
+                        } else {
+                            JOptionPane.showMessageDialog(null, "Debe ingresar un número entero válido entre 0 y 10");
+                        }
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Inscripción cancelada.");
+                        break; // Salir del bucle si se cancela la inscripción
+                    }
+                } while (nota < 0 || nota > 10);
+
+                if (nota >= 0 && nota <= 10) {
+//         Comprueba si la nota es validad y guarda la inscripcion, sino no.
+                    insData.guardarInscripcion(inscripcion);
+                }
+            } catch (NumberFormatException e) {
+                JOptionPane.showMessageDialog(null, "Debe ingresar un número entero válido entre 0 y 10");
+            }
+        } catch (ArrayIndexOutOfBoundsException e) {
+            JOptionPane.showMessageDialog(null, "Primero debes seleccionar una materia de la lista.", " Atencion!", JOptionPane.WARNING_MESSAGE);
+    }//GEN-LAST:event_jInscribirActionPerformed
+        //        Una agregada la inscripcion, llamo al metodo materiasNoInscriptas para que vacie la tabla y la recargue actualizada.
+        materiasNoInscriptas();
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.ButtonGroup buttonGroup;
