@@ -236,11 +236,14 @@ public class formularioMateria extends javax.swing.JInternalFrame {
                     materiaActual.setNombre(nom);
                     materiaActual.setAniomateria(anio);
                     materiaActual.setEstado(jRadioBestado.isSelected());
+                    if (nom.matches("^[a-zA-Z\\s]+$")) {
+                        materiaData.guardarMateria(materiaActual);
 
-                    materiaData.guardarMateria(materiaActual);
-                   
+                        JOptionPane.showMessageDialog(this, "Materia guardada con éxito");
+                    } else {
+                        JOptionPane.showMessageDialog(this, "El campo nombre solo debe contener letras y espacios.");
+                    }
 
-                    JOptionPane.showMessageDialog(this, "Materia guardada con éxito");
                 } catch (NumberFormatException e) {
                     JOptionPane.showMessageDialog(this, "Ingresa valores numéricos válidos en el campo Año.");
                 }
@@ -250,32 +253,37 @@ public class formularioMateria extends javax.swing.JInternalFrame {
             }
 
         } else {
-            
+
             if (!nombreText.isEmpty() && !anioText.isEmpty() && !idText.isEmpty()) {
                 try {
                     String nom = nombreText;
                     int anio = Integer.parseInt(anioText);
-                    int id = Integer.parseInt(idText);
-
+                    int id =  Integer.parseInt(idText);
+                    if (idText.matches("^[0-9]+$")) {
+                    } else {
+                        JOptionPane.showMessageDialog(this, "El campo id solo debe contener numeros.");
+                    }
                     materiaActual.setIdMateria(id);
                     materiaActual.setNombre(nom);
                     materiaActual.setAniomateria(anio);
                     materiaActual.setEstado(jRadioBestado.isSelected());
+                    if (nom.matches("^[a-zA-Z\\s]+$")) {
 
-                    materiaData.modificarMateria(materiaActual);
+                        materiaData.modificarMateria(materiaActual);
 
-                    JOptionPane.showMessageDialog(this, "Materia actualizada con éxito");
+                        JOptionPane.showMessageDialog(this, "Materia actualizada con éxito");
+                    } else {
+                        JOptionPane.showMessageDialog(this, "El campo nombre solo debe contener letras y espacios.");
+                    }
+
                 } catch (NumberFormatException e) {
-                    JOptionPane.showMessageDialog(this, "Ingresa valores numéricos válidos en el campo Año.");
+                    JOptionPane.showMessageDialog(this, "Ingresa valores numéricos solamente");
                 }
 
             } else {
                 JOptionPane.showMessageDialog(this, "Los campos nombre y Año no pueden estar vacíos.");
             }
-            
-            
-            
-            
+
         }
 
 

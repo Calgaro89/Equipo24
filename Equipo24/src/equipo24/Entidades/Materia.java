@@ -83,7 +83,7 @@ public class Materia {
 
     /*
     El método toString esta sobrescrito. Devuelve una representación de cadena
-    de la materia en forma de "nombre aniomateria°". Este método se utiliza para 
+    de la materia en forma de "nombre aniomateria". Este método se utiliza para 
     convertir una instancia de la clase Materia
     */
     
