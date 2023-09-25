@@ -37,6 +37,7 @@ public class AlumnoData {
          
          ps.close();
          
+         JOptionPane.showMessageDialog(null, " Alumno guardado ");
          
      } catch(SQLException ex){
      

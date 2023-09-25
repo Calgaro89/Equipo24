@@ -1,19 +1,18 @@
-
 package equipo24.vistas;
 
 import equipo24.AccesoADatos.AlumnoData;
 import equipo24.Entidades.Alumno;
-import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
 import javax.swing.JOptionPane;
 
-
 public class FormularioALumno extends javax.swing.JInternalFrame {
 
     AlumnoData alumno = new AlumnoData();
     Alumno alum = new Alumno();
+
+    private String lol;
 
     public FormularioALumno() {
         initComponents();
@@ -180,26 +179,27 @@ public class FormularioALumno extends javax.swing.JInternalFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jbBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbBuscarActionPerformed
-        
+
         try {
-        int dni = Integer.parseInt(jtDni.getText());
-        Alumno alumno2 = alumno.buscarAlumnoPorDni(dni);
 
-        if (alumno != null) {
+            int dni = Integer.parseInt(jtDni.getText());
+            Alumno alumno2 = alumno.buscarAlumnoPorDni(dni);
 
-            jtApellido.setText(alumno2.getApellido());
-            jtNombre.setText(alumno2.getNombre());
-            jrEstado.setSelected(alumno2.isEstado());
+            if (alumno != null) {
 
-            LocalDate fechaNacimientoLocalDate = alumno2.getFechaNac();
-            Date fechaNacimientoDate = Date.from(fechaNacimientoLocalDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
-            jdNacimiento.setDate(fechaNacimientoDate);
+                jtApellido.setText(alumno2.getApellido());
+                jtNombre.setText(alumno2.getNombre());
+                jrEstado.setSelected(alumno2.isEstado());
 
-        }
-        } catch (NumberFormatException nf){
-            JOptionPane.showMessageDialog(null, " Sabes leer lcdtm???? " );
-        }  catch (NullPointerException np) {
-            JOptionPane.showMessageDialog(null, " Alumno no encontrado " );
+                LocalDate fechaNacimientoLocalDate = alumno2.getFechaNac();
+                Date fechaNacimientoDate = Date.from(fechaNacimientoLocalDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
+                jdNacimiento.setDate(fechaNacimientoDate);
+
+            }
+        } catch (NumberFormatException nf) {
+            JOptionPane.showMessageDialog(null, " No se permiten letras, simbolos y espacios en este campo ");
+        } catch (NullPointerException np) {
+
         }
     }//GEN-LAST:event_jbBuscarActionPerformed
 
@@ -215,70 +215,80 @@ public class FormularioALumno extends javax.swing.JInternalFrame {
     private void jbEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbEliminarActionPerformed
 
         String textDni = (jtDni.getText());
-        
-        
-        if (!textDni.isEmpty() ) {
-            
-            int dni = Integer.parseInt(textDni);
-            
-            alumno.eliminarAlumno(dni);
 
-            jtDni.setText("");
-            jtApellido.setText("");
-            jtNombre.setText("");
-            jrEstado.setSelected(false);
-            
-           
-        } else {
+        try {
+            if (!textDni.isEmpty()) {
 
-            JOptionPane.showMessageDialog(null, " No hay alumno a eliminar");
+                int dni = Integer.parseInt(textDni);
+
+                alumno.eliminarAlumno(dni);
+
+                jtDni.setText("");
+                jtApellido.setText("");
+                jtNombre.setText("");
+                jrEstado.setSelected(false);
+
+            } else {
+
+                JOptionPane.showMessageDialog(null, " No hay alumno a eliminar");
+            }
+        } catch (NullPointerException np) {
+
+        } catch (NumberFormatException nf) {
+            JOptionPane.showMessageDialog(null, " No se permiten letras, simbolos y espacios en este campo ");
         }
-
     }//GEN-LAST:event_jbEliminarActionPerformed
 
     private void jbGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbGuardarActionPerformed
-        
-        try{
-        String textDni = (jtDni.getText());
-        String textApellido = (jtApellido.getText());
-        String textNombre =(jtNombre.getText());
-        
-        LocalDate fechaNac = (jdNacimiento.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
 
-        
-        if (!textDni.isEmpty()){
-            
-            if (!textApellido.isEmpty() && !textNombre.isEmpty()){
-                
-                int dni = Integer.parseInt(textDni);
-                String apellido = textApellido;
-                String nom = textNombre;
-                LocalDate fecha = fechaNac;
-                
-                
-                alum.setDni(dni);
-                alum.setApellido(apellido);
-                alum.setNombre(nom);
-                alum.setEstado(jrEstado.isSelected());
-                alum.setFechaNac(fechaNac);
-                
-                alumno.guardarAlumno(alum);
-                
-                JOptionPane.showMessageDialog(null, " Alumno guardado" );
+        try {
+            String textDni = (jtDni.getText());
+            String textApellido = (jtApellido.getText());
+            String textNombre = (jtNombre.getText());
+
+            LocalDate fechaNac = (jdNacimiento.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
+
+            if (!textDni.isEmpty()) {
+
+                if (!textApellido.isEmpty() && !textNombre.isEmpty()) {
+
+                    int dni = Integer.parseInt(textDni);
+                    String apellido = textApellido;
+                    String nom = textNombre;
+                    LocalDate fecha = fechaNac;
+
+                    alum.setDni(dni);
+                    alum.setApellido(apellido);
+                    alum.setNombre(nom);
+                    alum.setEstado(jrEstado.isSelected());
+                    alum.setFechaNac(fechaNac);
+                    
+                    if (apellido.matches("^[a-zA-Z\\s]+$")) {
+
+                       alumno.guardarAlumno(alum);
+
+                    } else {
+                        JOptionPane.showMessageDialog(null, " solo letras en apellido y nombre ");
+                    }
+                    
+                    
+                } else {
+                    JOptionPane.showMessageDialog(null, " Apellido y nombre vacios ");
+                }
+
             } else {
-                JOptionPane.showMessageDialog(null, " Apellido y nombre vacios ");
+                JOptionPane.showMessageDialog(null, " Falta el DNI ");
             }
             
-        } else {
-            JOptionPane.showMessageDialog(null, " Falta el DNI " );
-        }
         } catch (NullPointerException np) {
-            
-            JOptionPane.showMessageDialog(null, " Falta completar algun campo " );
-            
-        } catch (NumberFormatException nf){
-            JOptionPane.showMessageDialog(null, " Sabes leer lcdtm???? " );
+
+            JOptionPane.showMessageDialog(null, " Falta completar algun campo ");
+
+        } catch (NumberFormatException nf) {
+            JOptionPane.showMessageDialog(null, " no se aceptan letras en el campo dni ");
         }
+
+
     }//GEN-LAST:event_jbGuardarActionPerformed
 
     private void jbSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbSalirActionPerformed
@@ -306,9 +316,5 @@ public class FormularioALumno extends javax.swing.JInternalFrame {
     private javax.swing.JTextField jtDni;
     private javax.swing.JTextField jtNombre;
     // End of variables declaration//GEN-END:variables
-
-    
-   
-    
 
 }
