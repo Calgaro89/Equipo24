@@ -12,8 +12,6 @@ public class FormularioALumno extends javax.swing.JInternalFrame {
     AlumnoData alumno = new AlumnoData();
     Alumno alum = new Alumno();
 
-    
-
     public FormularioALumno() {
         initComponents();
     }
@@ -239,7 +237,6 @@ public class FormularioALumno extends javax.swing.JInternalFrame {
         }
     }//GEN-LAST:event_jbEliminarActionPerformed
 
-    
     private boolean cosoQueValida() {
 
         boolean validar = true;
