@@ -11,7 +11,6 @@ import equipo24.AccesoADatos.InscripcionData;
 import equipo24.Entidades.Alumno;
 import equipo24.Entidades.Inscripcion;
 import equipo24.Entidades.Materia;
-import java.awt.HeadlessException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -175,12 +174,12 @@ public class cargaNotas extends javax.swing.JInternalFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+
         dispose();
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         Alumno st = (Alumno) jComboBox1.getSelectedItem();
-        int error = 0;
         int idA = st.getIdAlumno();
 
         for (int i = 0; i < (modelo.getRowCount()); i++) {
@@ -195,25 +194,22 @@ public class cargaNotas extends javax.swing.JInternalFrame {
 
                 if (nota >= 0 && nota <= 10) {
                     mats.actualizarNota(idA, idm, nota);
-
+                
+                 
                 } else {
                     JOptionPane.showMessageDialog(null, "Debe ingresar un número entero válido entre 0 y 10");
                     modelo.setValueAt("", i, 2);
-                    error++;
                 }
-                break;
 
             } catch (NumberFormatException e) {
-                JOptionPane.showMessageDialog(null, "Debe ingresar un número entero válido entre 0 y 10, no deje campos vacios");
-                modelo.setValueAt("", i, 2);
-                error++;
+                JOptionPane.showMessageDialog(null, "Debe ingresar un número entero válido entre 0 y 10");
+                 modelo.setValueAt("", i, 2);
                 break;
             }
+            
         }
-        if (error == 0) {
             JOptionPane.showMessageDialog(rootPane, "Se actualizo las nota/s correctamente");
-        }
-        // borrarFilas();
+            borrarFilas();
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
@@ -221,29 +217,29 @@ public class cargaNotas extends javax.swing.JInternalFrame {
         con = Conexion.getConexion();
         Alumno st = (Alumno) jComboBox1.getSelectedItem();
 
-//        try {
+        try {
             for (Materia aux : mats.obtenerMateriasCursadas(st.getIdAlumno())) {
-             Inscripcion nota=(Inscripcion) mats.obtenerNota(st.getIdAlumno(),aux.getIdMateria());
-//                String sql = "SELECT * "
-//                        + "FROM inscripcion "
-//                        + "WHERE idAlumno=? AND idMAteria=?";
-//                PreparedStatement ps = con.prepareStatement(sql);
-//                ps.setInt(1, st.getIdAlumno());
-//                ps.setInt(2, aux.getIdMateria());
-//                ResultSet rs = ps.executeQuery();
-//                Inscripcion Inscripcion = null;
-//                while (rs.next()) {
-//                    Inscripcion = new Inscripcion();
-//                    Inscripcion.setNota(rs.getInt("nota"));
-//                }
+//          int nota=mats.obtener(st.getIdAlumno(),aux.getIdMateria());
+                String sql = "SELECT * "
+                        + "FROM inscripcion "
+                        + "WHERE idAlumno=? AND idMAteria=?";
+                PreparedStatement ps = con.prepareStatement(sql);
+                ps.setInt(1, st.getIdAlumno());
+                ps.setInt(2, aux.getIdMateria());
+                ResultSet rs = ps.executeQuery();
+                Inscripcion Inscripcion = null;
+                while (rs.next()) {
+                    Inscripcion = new Inscripcion();
+                    Inscripcion.setNota(rs.getInt("nota"));
+                }
                 modelo.addRow(new Object[]{
                     aux.getIdMateria(),
-                    aux.getNombre() + " " + aux.getAniomateria()+"°",
-                    nota.getNota(),});
+                    aux.getNombre()+" "+aux.getAniomateria() ,
+                    Inscripcion.getNota(),});
             }
-//        } catch (SQLException ex) {
-//            JOptionPane.showMessageDialog(null, "Error al buscar notas");
-//        }
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null, "Error al buscar notas");
+        }
     }//GEN-LAST:event_jComboBox1ActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
