@@ -262,19 +262,21 @@ public class FormularioALumno extends javax.swing.JInternalFrame {
                     alum.setNombre(nom);
                     alum.setEstado(jrEstado.isSelected());
                     alum.setFechaNac(fechaNac);
-                    
+
                     if (apellido.matches("^[a-zA-Z\\s]+$")) {
-                       if (nom.matches("^[a-zA-Z\\s]+$")) {
-                           
-                           alumno.guardarAlumno(alum);
-                           
-                       }else {
-                        JOptionPane.showMessageDialog(null, " solo letras en apellido y nombre ");     
-                     
-                    } 
-                   }
-                    
-                    
+                        if (nom.matches("^[a-zA-Z\\s]+$")) {
+
+                            alumno.guardarAlumno(alum);
+
+                        } else {
+                            JOptionPane.showMessageDialog(null, " solo letras en nombre ");
+
+                        }
+                    } else {
+                        JOptionPane.showMessageDialog(null, " solo letras en apellido ");
+
+                    }
+
                 } else {
                     JOptionPane.showMessageDialog(null, " Apellido y nombre vacios ");
                 }
@@ -282,7 +284,7 @@ public class FormularioALumno extends javax.swing.JInternalFrame {
             } else {
                 JOptionPane.showMessageDialog(null, " Falta el DNI ");
             }
-            
+
         } catch (NullPointerException np) {
 
             JOptionPane.showMessageDialog(null, " Falta completar algun campo ");
