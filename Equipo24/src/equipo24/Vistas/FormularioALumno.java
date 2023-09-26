@@ -253,27 +253,26 @@ public class FormularioALumno extends javax.swing.JInternalFrame {
         }
         return validar;
     }
-    
-    private int obtenerId(){
-        
+
+    private int obtenerId() {
+
         String textDni = (jtDni.getText());
         int dni = Integer.parseInt(textDni);
         int id = 0;
-        
-        for(Alumno nomb: alumno.listarAlumnos()){
-            
-            if(nomb.getDni() == dni){
-                
+
+        for (Alumno nomb : alumno.listarAlumnos()) {
+
+            if (nomb.getDni() == dni) {
+
                 id = nomb.getIdAlumno();
-                
-                
+
             }
         }
-        
+
         return id;
     }
-    
-    
+
+
     private void jbGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbGuardarActionPerformed
 
         try {
@@ -317,19 +316,19 @@ public class FormularioALumno extends javax.swing.JInternalFrame {
                     }
 
                 } else {
-                    
+
                     System.out.println(cosoQueValida());
-                    
+
                     if (!cosoQueValida()) {
                         System.out.println(" entre 1");
                         if (!textApellido.isEmpty() && !textNombre.isEmpty()) {
-                        System.out.println(" entre 2");
-                        
+                            System.out.println(" entre 2");
+
                             int dni = Integer.parseInt(textDni);
                             String apellido = textApellido;
                             String nom = textNombre;
                             LocalDate fecha = fechaNac;
-                            
+
                             alum.setIdAlumno(obtenerId());
                             alum.setDni(dni);
                             alum.setApellido(apellido);
@@ -341,7 +340,7 @@ public class FormularioALumno extends javax.swing.JInternalFrame {
                                 if (nom.matches("^[a-zA-Z\\s]+$")) {
 
                                     alumno.modificarAlumno(alum);
-                                    
+
                                     System.out.println(" entre 3");
                                 } else {
                                     JOptionPane.showMessageDialog(null, " solo letras en nombre ");
@@ -358,7 +357,6 @@ public class FormularioALumno extends javax.swing.JInternalFrame {
                         }
                     }
 
-                    
                 }
 
             } else {
