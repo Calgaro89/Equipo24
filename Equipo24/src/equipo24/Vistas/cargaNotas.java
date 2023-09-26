@@ -181,21 +181,35 @@ public class cargaNotas extends javax.swing.JInternalFrame {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         Alumno st = (Alumno) jComboBox1.getSelectedItem();
         int idA = st.getIdAlumno();
-        
+
         for (int i = 0; i < (modelo.getRowCount()); i++) {
+            try {
+                Object f = modelo.getValueAt(i, 2);
+                String d = f.toString();
+                int nota = Integer.parseInt(d);
 
-            Object f = modelo.getValueAt(i, 2);
-            String d = f.toString();
-            int nota = Integer.parseInt(d);
+                Object g = modelo.getValueAt(i, 0);
+                String h = g.toString();
+                int idm = Integer.parseInt(h);
 
-            Object g = modelo.getValueAt(i, 0);
-            String h = g.toString();
-            int idm = Integer.parseInt(h);
+                if (nota >= 0 && nota <= 10) {
+                    mats.actualizarNota(idA, idm, nota);
+                
+                 
+                } else {
+                    JOptionPane.showMessageDialog(null, "Debe ingresar un número entero válido entre 0 y 10");
+                    modelo.setValueAt("", i, 2);
+                }
 
-            mats.actualizarNota(idA, idm, nota);
+            } catch (NumberFormatException e) {
+                JOptionPane.showMessageDialog(null, "Debe ingresar un número entero válido entre 0 y 10");
+                 modelo.setValueAt("", i, 2);
+                break;
+            }
+            
         }
-        JOptionPane.showMessageDialog(rootPane, "Se actualizo las nota/s correctamente");
-          borrarFilas();
+            JOptionPane.showMessageDialog(rootPane, "Se actualizo las nota/s correctamente");
+            borrarFilas();
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
@@ -205,6 +219,7 @@ public class cargaNotas extends javax.swing.JInternalFrame {
 
         try {
             for (Materia aux : mats.obtenerMateriasCursadas(st.getIdAlumno())) {
+//          int nota=mats.obtener(st.getIdAlumno(),aux.getIdMateria());
                 String sql = "SELECT * "
                         + "FROM inscripcion "
                         + "WHERE idAlumno=? AND idMAteria=?";
@@ -219,9 +234,8 @@ public class cargaNotas extends javax.swing.JInternalFrame {
                 }
                 modelo.addRow(new Object[]{
                     aux.getIdMateria(),
-                    aux.getNombre(),
+                    aux.getNombre()+" "+aux.getAniomateria() ,
                     Inscripcion.getNota(),});
-
             }
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(null, "Error al buscar notas");
