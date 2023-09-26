@@ -264,12 +264,15 @@ public class FormularioALumno extends javax.swing.JInternalFrame {
                     alum.setFechaNac(fechaNac);
                     
                     if (apellido.matches("^[a-zA-Z\\s]+$")) {
-
-                       alumno.guardarAlumno(alum);
-
-                    } else {
-                        JOptionPane.showMessageDialog(null, " solo letras en apellido y nombre ");
-                    }
+                       if (nom.matches("^[a-zA-Z\\s]+$")) {
+                           
+                           alumno.guardarAlumno(alum);
+                           
+                       }else {
+                        JOptionPane.showMessageDialog(null, " solo letras en apellido y nombre ");     
+                     
+                    } 
+                   }
                     
                     
                 } else {
