@@ -20,7 +20,7 @@ public class consulta extends javax.swing.JInternalFrame {
     private DefaultTableModel modelo = new DefaultTableModel() {
         @Override
         public boolean isCellEditable(int f, int c) {
-            if (c == 2) {
+            if (c == -1) {
                 return true;
             } else {
                 return false;
@@ -33,6 +33,7 @@ public class consulta extends javax.swing.JInternalFrame {
         for (Materia listar : combo.listarMaterias()) {
             jComboBox1.addItem(listar);
         }
+        jComboBox1.setSelectedIndex(-1);
     }
 
     private void cabecera() {
@@ -160,7 +161,8 @@ public class consulta extends javax.swing.JInternalFrame {
     private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
         // TODO add your handling code here:
          borrarFilas();
-        Materia mat = (Materia) jComboBox1.getSelectedItem();
+         if (jComboBox1.getSelectedIndex()!=-1) {
+                    Materia mat = (Materia) jComboBox1.getSelectedItem();
         
         for (Alumno aux : inscribir.obtenerAlumnosXMateria(mat.getIdMateria())) {
             modelo.addRow(new Object[]{
@@ -169,6 +171,8 @@ public class consulta extends javax.swing.JInternalFrame {
                 aux.getApellido(),
                 aux.getNombre()});
         }
+        }
+
     }//GEN-LAST:event_jComboBox1ActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

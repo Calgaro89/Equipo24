@@ -6,16 +6,12 @@
 package equipo24.vistas;
 
 import equipo24.AccesoADatos.AlumnoData;
-import equipo24.AccesoADatos.Conexion;
+
 import equipo24.AccesoADatos.InscripcionData;
 import equipo24.Entidades.Alumno;
 import equipo24.Entidades.Inscripcion;
 import equipo24.Entidades.Materia;
 import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
@@ -27,7 +23,7 @@ public class cargaNotas extends javax.swing.JInternalFrame {
     public cargaNotas() {
         initComponents();
         cabecera();
-        llenar(); 
+        llenar();
     }
     private DefaultTableModel modelo = new DefaultTableModel() {
 
@@ -46,6 +42,7 @@ public class cargaNotas extends javax.swing.JInternalFrame {
         for (Alumno listar : combo.listarAlumnos()) {
             jComboBox1.addItem(listar);
         }
+        jComboBox1.setSelectedIndex(-1);
     }
 
     private void cabecera() {
@@ -182,8 +179,8 @@ public class cargaNotas extends javax.swing.JInternalFrame {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         Alumno st = (Alumno) jComboBox1.getSelectedItem();
         int idA = st.getIdAlumno();
-        int error=0;
-         for (int i = 0; i < (modelo.getRowCount()); i++) {
+        int error = 0;
+        for (int i = 0; i < (modelo.getRowCount()); i++) {
             try {
                 Object f = modelo.getValueAt(i, 2);
                 String d = f.toString();
@@ -195,35 +192,38 @@ public class cargaNotas extends javax.swing.JInternalFrame {
                     mats.actualizarNota(idA, idm, nota);
                 } else {
                     JOptionPane.showMessageDialog(null, "Debe ingresar un número entero válido entre 0 y 10");
-                    error++;}
+                    error++;
+                }
             } catch (NumberFormatException e) {
-                JOptionPane.showMessageDialog(null, "Debe ingresar un número entero válido entre 0 y 10, no deje campos vacios");             
+                JOptionPane.showMessageDialog(null, "Debe ingresar un número entero válido entre 0 y 10, no deje campos vacios");
                 error++;
             }
         }
         if (error == 0) {
             JOptionPane.showMessageDialog(rootPane, "Se actualizo las nota/s correctamente");
-         }
+        }
         recargarTabla();
     }//GEN-LAST:event_jButton1ActionPerformed
-private void recargarTabla() {
-    borrarFilas();
+    private void recargarTabla() {
+        borrarFilas();
         Inscripcion inscripcion = new Inscripcion();
-        Alumno alumno = (Alumno) jComboBox1.getSelectedItem();
-        for (Materia aux : mats.obtenerMateriasCursadas(alumno.getIdAlumno())) {
-            for (Inscripcion aux2 : mats.obtenerInscripcionesPorAlumno(alumno.getIdAlumno())) {
-                if (aux2.getMateria().getIdMateria() == aux.getIdMateria()) {
-                    modelo.addRow(new Object[]{
-                        aux.getIdMateria(),
-                        aux.getNombre(),
-                        aux2.getNota(),});
+        if (jComboBox1.getSelectedIndex() != -1) {
+            Alumno alumno = (Alumno) jComboBox1.getSelectedItem();
+            for (Materia aux : mats.obtenerMateriasCursadas(alumno.getIdAlumno())) {
+                for (Inscripcion aux2 : mats.obtenerInscripcionesPorAlumno(alumno.getIdAlumno())) {
+                    if (aux2.getMateria().getIdMateria() == aux.getIdMateria()) {
+                        modelo.addRow(new Object[]{
+                            aux.getIdMateria(),
+                            aux.getNombre(),
+                            aux2.getNota(),});
+                    }
                 }
             }
         }
     }
-    
+
     private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
-       recargarTabla();
+        recargarTabla();
     }//GEN-LAST:event_jComboBox1ActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

@@ -341,7 +341,7 @@ public class formularioInscripcion extends javax.swing.JInternalFrame {
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTable jTabla;
     // End of variables declaration//GEN-END:variables
-public void cabecera() {
+private void cabecera() {
 //     Agrega 3 columnas a la tabla con sus respectivos nombres.
         modelo.addColumn("ID");
         modelo.addColumn("Nombre");
@@ -349,7 +349,7 @@ public void cabecera() {
         jTabla.setModel(modelo);
     }
 
-    public void LimpiarTabla() {
+    private void LimpiarTabla() {
 //     A la tabla ya creada, le volvemos a setear el modelo por defecto que le pusimos y en el for hacemos que elimine todas las filas para vaciarla.   
         DefaultTableModel modelo = (DefaultTableModel) jTabla.getModel();
         int filas = jTabla.getRowCount();
@@ -359,7 +359,7 @@ public void cabecera() {
         }
     }
 
-    public void cargarAlumnos() {
+    private void cargarAlumnos() {
 //      Carga todos los alumnos obtenidos del metodo listarAlumnos() y los agregar al jComboBox.  
         for (Alumno alumno : aluData.listarAlumnos()) {
             jCombo.addItem(alumno);

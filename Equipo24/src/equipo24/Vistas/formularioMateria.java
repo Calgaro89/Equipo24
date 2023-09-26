@@ -2,7 +2,6 @@ package equipo24.vistas;
 
 import equipo24.AccesoADatos.MateriaData;
 import equipo24.Entidades.Materia;
-import java.sql.SQLException;
 import javax.swing.JOptionPane;
 
 public class formularioMateria extends javax.swing.JInternalFrame {
