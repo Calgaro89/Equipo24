@@ -171,11 +171,12 @@ public class AlumnoData {
             if (exito == 1) {
                 
                 JOptionPane.showMessageDialog(null, " Modificado exitosamente ");
+                
             } else{
                 
-                JOptionPane.showMessageDialog(null, " El alumno no existe ");
+                System.out.println(" la cague ");
             }
-            
+               
         } catch(SQLException ex){
             
             JOptionPane.showMessageDialog(null, " Error al acceder a la tabla alumno ");
