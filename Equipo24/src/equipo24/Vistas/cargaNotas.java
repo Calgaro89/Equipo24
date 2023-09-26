@@ -181,65 +181,48 @@ public class cargaNotas extends javax.swing.JInternalFrame {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         Alumno st = (Alumno) jComboBox1.getSelectedItem();
         int idA = st.getIdAlumno();
-
-        for (int i = 0; i < (modelo.getRowCount()); i++) {
+        int error=0;
+         for (int i = 0; i < (modelo.getRowCount()); i++) {
             try {
                 Object f = modelo.getValueAt(i, 2);
                 String d = f.toString();
                 int nota = Integer.parseInt(d);
-
                 Object g = modelo.getValueAt(i, 0);
                 String h = g.toString();
                 int idm = Integer.parseInt(h);
-
                 if (nota >= 0 && nota <= 10) {
                     mats.actualizarNota(idA, idm, nota);
-                
-                 
                 } else {
                     JOptionPane.showMessageDialog(null, "Debe ingresar un número entero válido entre 0 y 10");
-                    modelo.setValueAt("", i, 2);
-                }
-
+                    error++;}
             } catch (NumberFormatException e) {
-                JOptionPane.showMessageDialog(null, "Debe ingresar un número entero válido entre 0 y 10");
-                 modelo.setValueAt("", i, 2);
-                break;
+                JOptionPane.showMessageDialog(null, "Debe ingresar un número entero válido entre 0 y 10, no deje campos vacios");             
+                error++;
             }
-            
         }
+        if (error == 0) {
             JOptionPane.showMessageDialog(rootPane, "Se actualizo las nota/s correctamente");
-            borrarFilas();
-    }//GEN-LAST:event_jButton1ActionPerformed
-
-    private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
-        borrarFilas();
-        con = Conexion.getConexion();
-        Alumno st = (Alumno) jComboBox1.getSelectedItem();
-
-        try {
-            for (Materia aux : mats.obtenerMateriasCursadas(st.getIdAlumno())) {
-//          int nota=mats.obtener(st.getIdAlumno(),aux.getIdMateria());
-                String sql = "SELECT * "
-                        + "FROM inscripcion "
-                        + "WHERE idAlumno=? AND idMAteria=?";
-                PreparedStatement ps = con.prepareStatement(sql);
-                ps.setInt(1, st.getIdAlumno());
-                ps.setInt(2, aux.getIdMateria());
-                ResultSet rs = ps.executeQuery();
-                Inscripcion Inscripcion = null;
-                while (rs.next()) {
-                    Inscripcion = new Inscripcion();
-                    Inscripcion.setNota(rs.getInt("nota"));
-                }
-                modelo.addRow(new Object[]{
-                    aux.getIdMateria(),
-                    aux.getNombre()+" "+aux.getAniomateria() ,
-                    Inscripcion.getNota(),});
-            }
-        } catch (SQLException ex) {
-            JOptionPane.showMessageDialog(null, "Error al buscar notas");
+            recargarTabla();
         }
+    }//GEN-LAST:event_jButton1ActionPerformed
+private void recargarTabla() {
+    borrarFilas();
+        Inscripcion inscripcion = new Inscripcion();
+        Alumno alumno = (Alumno) jComboBox1.getSelectedItem();
+        for (Materia aux : mats.obtenerMateriasCursadas(alumno.getIdAlumno())) {
+            for (Inscripcion aux2 : mats.obtenerInscripcionesPorAlumno(alumno.getIdAlumno())) {
+                if (aux2.getMateria().getIdMateria() == aux.getIdMateria()) {
+                    modelo.addRow(new Object[]{
+                        aux.getIdMateria(),
+                        aux.getNombre(),
+                        aux2.getNota(),});
+                }
+            }
+        }
+    }
+    
+    private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
+       recargarTAbla();
     }//GEN-LAST:event_jComboBox1ActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
