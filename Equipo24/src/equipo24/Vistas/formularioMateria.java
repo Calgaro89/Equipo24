@@ -226,9 +226,10 @@ public class formularioMateria extends javax.swing.JInternalFrame {
         String anioText = jTexaño.getText();
         String idText = jTexcodigo.getText();
 
-        if (idText.isEmpty()) {
-
+        if (idText.isEmpty() || !comprobar()) {
+            System.out.println("ENTRE");
             if (!nombreText.isEmpty() && !anioText.isEmpty()) {
+
                 try {
                     String nom = nombreText;
                     int anio = Integer.parseInt(anioText);
@@ -254,34 +255,41 @@ public class formularioMateria extends javax.swing.JInternalFrame {
 
         } else {
 
-            if (!nombreText.isEmpty() && !anioText.isEmpty() && !idText.isEmpty()) {
-                try {
-                    String nom = nombreText;
-                    int anio = Integer.parseInt(anioText);
-                    int id =  Integer.parseInt(idText);
-                    if (idText.matches("^[0-9]+$")) {
-                    } else {
-                        JOptionPane.showMessageDialog(this, "El campo id solo debe contener numeros.");
+            if (comprobar()) {
+
+                if (!nombreText.isEmpty() && !anioText.isEmpty()) {
+                    try {
+                        String nom = nombreText;
+                        int anio = Integer.parseInt(anioText);
+                        int id = Integer.parseInt(idText);
+                        if (idText.matches("^[0-9]+$")) {
+                        } else {
+                            JOptionPane.showMessageDialog(this, "El campo id solo debe contener numeros.");
+                        }
+                        materiaActual.setIdMateria(id);
+                        materiaActual.setNombre(nom);
+                        materiaActual.setAniomateria(anio);
+                        materiaActual.setEstado(jRadioBestado.isSelected());
+                        if (nom.matches("^[a-zA-Z\\s]+$")) {
+
+                            materiaData.modificarMateria(materiaActual);
+
+                        } else {
+                            JOptionPane.showMessageDialog(this, "El campo nombre solo debe contener letras y espacios.");
+                        }
+
+                    } catch (NumberFormatException e) {
+                        JOptionPane.showMessageDialog(this, "Ingresa valores numéricos solamente");
                     }
-                    materiaActual.setIdMateria(id);
-                    materiaActual.setNombre(nom);
-                    materiaActual.setAniomateria(anio);
-                    materiaActual.setEstado(jRadioBestado.isSelected());
-                    if (nom.matches("^[a-zA-Z\\s]+$")) {
 
-                        materiaData.modificarMateria(materiaActual);
-
-                        JOptionPane.showMessageDialog(this, "Materia actualizada con éxito");
-                    } else {
-                        JOptionPane.showMessageDialog(this, "El campo nombre solo debe contener letras y espacios.");
-                    }
-
-                } catch (NumberFormatException e) {
-                    JOptionPane.showMessageDialog(this, "Ingresa valores numéricos solamente");
+                } else {
+                    JOptionPane.showMessageDialog(this, "Los campos nombre y Año no pueden estar vacíos.");
                 }
 
             } else {
-                JOptionPane.showMessageDialog(this, "Los campos nombre y Año no pueden estar vacíos.");
+
+                JOptionPane.showMessageDialog(this, "Materia inexistente");
+
             }
 
         }
@@ -318,4 +326,20 @@ public class formularioMateria extends javax.swing.JInternalFrame {
     private javax.swing.JTextField jTexcodigo;
     private javax.swing.JTextField jTexnombre;
     // End of variables declaration//GEN-END:variables
+
+    public boolean comprobar() {
+        boolean validador = false;
+        String idText = jTexcodigo.getText();
+        int id = Integer.parseInt(idText);
+        for (Materia mat : materiaData.listarMaterias()) {
+            if (id == mat.getIdMateria()) {
+                validador = true;
+
+            }
+        }
+
+        return validador;
+
+    }
+
 }
