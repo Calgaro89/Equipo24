@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 
 public class InscripcionData {
@@ -21,7 +22,7 @@ public class InscripcionData {
     private AlumnoData aluData;
 
     public InscripcionData() {
-        con = Conexion.getConexion();
+        con = Conexion.getConexion(); 
     }
 
     public void guardarInscripcion(Inscripcion inscripcion) {
@@ -198,21 +199,4 @@ public class InscripcionData {
         }
         return alumnos;
     }
-    
-//    public int obtener (int ida, int idm) {
-//  
-//        String sql = "SELECT nota FROM inscripcion "
-//                + "WHERE idAlumno=? AND idMAteria=?";
-//        try {
-//          PreparedStatement ps = con.prepareStatement(sql);
-//                ps.setInt(1, ida);
-//                ps.setInt(2, idm);
-//                ResultSet rs = ps.executeQuery();
-//           
-//                    return rs.getInt("nota");
-//        } catch (SQLException ex) {
-//            JOptionPane.showMessageDialog(null, "Error al buscar nota");
-//        }
-//        return 0;
-//    }   
 }

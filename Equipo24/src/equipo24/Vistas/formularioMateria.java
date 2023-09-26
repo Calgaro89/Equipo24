@@ -14,6 +14,7 @@ public class formularioMateria extends javax.swing.JInternalFrame {
         initComponents();
         materiaData = new MateriaData();
         materiaActual = new Materia();
+        
     }
 
     @SuppressWarnings("unchecked")
@@ -43,6 +44,7 @@ public class formularioMateria extends javax.swing.JInternalFrame {
 
         jLestado.setText("Estado");
 
+        jLmateria.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         jLmateria.setText("Materia");
 
         jBnuevo.setText("Nuevo");

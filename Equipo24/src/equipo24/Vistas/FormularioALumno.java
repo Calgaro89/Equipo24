@@ -5,6 +5,7 @@ import equipo24.Entidades.Alumno;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
+import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 
 public class FormularioALumno extends javax.swing.JInternalFrame {
@@ -14,6 +15,8 @@ public class FormularioALumno extends javax.swing.JInternalFrame {
 
     public FormularioALumno() {
         initComponents();
+        ImageIcon icono = new ImageIcon("/equipo24/recursos/fernet.png");
+        setFrameIcon(icono);
     }
 
     @SuppressWarnings("unchecked")
@@ -40,6 +43,7 @@ public class FormularioALumno extends javax.swing.JInternalFrame {
 
         setClosable(true);
 
+        jLabel1.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         jLabel1.setText("Alumno");
 
         jLabel2.setText("DNI");
